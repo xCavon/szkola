@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wyniki badań</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h2>Wyniki badań</h2>
+        
+        <ul id="results-list">
+            <!-- Tutaj pojawią się wyniki badań -->
+        </ul>
+
+        <h3>Dodaj nowy wynik badania</h3>
+        <input type="text" id="test-name" placeholder="Nazwa badania">
+        <input type="text" id="test-result" placeholder="Wynik">
+        <input type="date" id="test-date">
+        <button onclick="addResult()">Dodaj wynik</button>
+
+        <br><br>
+        <button onclick="goBack()">Powrót</button>
+    </div>
+
+    <script>
+        // Wczytaj wyniki badań z localStorage
+        function loadResults() {
+            const list = document.getElementById("results-list");
+            list.innerHTML = "";
+            const results = JSON.parse(localStorage.getItem("results")) || [];
+            
+            results.forEach((result, index) => {
+                const li = document.createElement("li");
+                li.innerHTML = `📄 ${result.date} - ${result.name}: <b>${result.result}</b> 
+                <button onclick="removeResult(${index})">Usuń</button>`;
+                list.appendChild(li);
+            });
+        }
+
+        // Dodaj nowy wynik badania
+        function addResult() {
+            const name = document.getElementById("test-name").value;
+            const result = document.getElementById("test-result").value;
+            const date = document.getElementById("test-date").value;
+
+            if (name && result && date) {
+                const results = JSON.parse(localStorage.getItem("results")) || [];
+                results.push({ name, result, date });
+                localStorage.setItem("results", JSON.stringify(results));
+                loadResults();
+            } else {
+                alert("Podaj nazwę badania, wynik i datę!");
+            }
+        }
+
+        // Usuń wynik badania
+        function removeResult(index) {
+            const results = JSON.parse(localStorage.getItem("results")) || [];
+            results.splice(index, 1);
+            localStorage.setItem("results", JSON.stringify(results));
+            loadResults();
+        }
+
+        // Powrót do strony głównej
+        function goBack() {
+            window.location.href = "doctor.html";
+        }
+
+        loadResults();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wizyty</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h2>Twoje wizyty</h2>
+        
+        <ul id="appointments-list">
+            <!-- Tutaj pojawią się wizyty -->
+        </ul>
+
+        <h3>Dodaj nową wizytę</h3>
+        <input type="text" id="patient-name" placeholder="Imię i nazwisko pacjenta">
+        <input type="date" id="appointment-date">
+        <button onclick="addAppointment()">Dodaj wizytę</button>
+
+        <br><br>
+        <button onclick="goBack()">Powrót</button>
+    </div>
+
+    <script>
+        // Wczytaj wizyty z localStorage
+        function loadAppointments() {
+            const list = document.getElementById("appointments-list");
+            list.innerHTML = "";
+            const appointments = JSON.parse(localStorage.getItem("appointments")) || [];
+            
+            appointments.forEach((appointment, index) => {
+                const li = document.createElement("li");
+                li.innerHTML = `📅 ${appointment.date} - ${appointment.name} 
+                <button onclick="removeAppointment(${index})">Usuń</button>`;
+                list.appendChild(li);
+            });
+        }
+
+        // Dodaj wizytę
+        function addAppointment() {
+            const name = document.getElementById("patient-name").value;
+            const date = document.getElementById("appointment-date").value;
+
+            if (name && date) {
+                const appointments = JSON.parse(localStorage.getItem("appointments")) || [];
+                appointments.push({ name, date });
+                localStorage.setItem("appointments", JSON.stringify(appointments));
+                loadAppointments();
+            } else {
+                alert("Podaj imię pacjenta i wybierz datę!");
+            }
+        }
+
+        // Usuń wizytę
+        function removeAppointment(index) {
+            const appointments = JSON.parse(localStorage.getItem("appointments")) || [];
+            appointments.splice(index, 1);
+            localStorage.setItem("appointments", JSON.stringify(appointments));
+            loadAppointments();
+        }
+
+        // Powrót do strony głównej
+        function goBack() {
+            window.location.href = "doctor.html";
+        }
+
+        loadAppointments();
+    </script>
+
+</body>
+</html>

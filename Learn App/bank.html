@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stan konta</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h2>Stan konta</h2>
+        
+        <h3>Twoje saldo: <span id="balance">0</span> zł</h3>
+
+        <h3>Dodaj transakcję</h3>
+        <input type="number" id="amount" placeholder="Kwota">
+        <select id="transaction-type">
+            <option value="deposit">Wpłata</option>
+            <option value="withdraw">Wypłata</option>
+        </select>
+        <button onclick="addTransaction()">Dodaj</button>
+
+        <h3>Historia transakcji</h3>
+        <ul id="transaction-history">
+            <!-- Tutaj pojawią się transakcje -->
+        </ul>
+
+        <br>
+        <button onclick="goBack()">Powrót</button>
+    </div>
+
+    <script>
+        function loadBalance() {
+            const balance = localStorage.getItem("balance") || "0";
+            document.getElementById("balance").innerText = balance;
+            loadTransactions();
+        }
+
+        function addTransaction() {
+            const amount = parseFloat(document.getElementById("amount").value);
+            const type = document.getElementById("transaction-type").value;
+
+            if (!amount || amount <= 0) {
+                alert("Podaj poprawną kwotę!");
+                return;
+            }
+
+            let balance = parseFloat(localStorage.getItem("balance") || "0");
+
+            if (type === "deposit") {
+                balance += amount;
+            } else if (type === "withdraw") {
+                if (amount > balance) {
+                    alert("Nie masz wystarczających środków!");
+                    return;
+                }
+                balance -= amount;
+            }
+
+            localStorage.setItem("balance", balance);
+            document.getElementById("balance").innerText = balance;
+
+            saveTransaction(amount, type);
+            loadTransactions();
+        }
+
+        function saveTransaction(amount, type) {
+            const transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+            transactions.push({ amount, type, date: new Date().toLocaleString() });
+            localStorage.setItem("transactions", JSON.stringify(transactions));
+        }
+
+        function loadTransactions() {
+            const transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+            const historyList = document.getElementById("transaction-history");
+            historyList.innerHTML = "";
+
+            transactions.forEach((t, index) => {
+                const li = document.createElement("li");
+                li.innerHTML = `${t.date} - ${t.type === "deposit" ? "Wpłata" : "Wypłata"}: ${t.amount} zł 
+                <button onclick="removeTransaction(${index})">Usuń</button>`;
+                historyList.appendChild(li);
+            });
+        }
+
+        function removeTransaction(index) {
+            const transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+            let balance = parseFloat(localStorage.getItem("balance") || "0");
+
+            if (transactions[index].type === "deposit") {
+                balance -= transactions[index].amount;
+            } else {
+                balance += transactions[index].amount;
+            }
+
+            transactions.splice(index, 1);
+            localStorage.setItem("transactions", JSON.stringify(transactions));
+            localStorage.setItem("balance", balance);
+            document.getElementById("balance").innerText = balance;
+            loadTransactions();
+        }
+
+        function goBack() {
+            window.location.href = "doctor.html";
+        }
+
+        loadBalance();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wyniki badań</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h2>Wyniki Twoich badań</h2>
+        
+        <ul id="results-list">
+            <!-- Tutaj pojawią się wyniki badań pacjenta -->
+        </ul>
+
+        <br>
+        <button onclick="goBack()">Powrót</button>
+    </div>
+
+    <script>
+        // Pobieranie wyników pacjenta
+        function loadResults() {
+            const list = document.getElementById("results-list");
+            list.innerHTML = "";
+            const results = JSON.parse(localStorage.getItem("results")) || [];
+            
+            if (results.length === 0) {
+                list.innerHTML = "<li>Brak wyników badań.</li>";
+            } else {
+                results.forEach(result => {
+                    const li = document.createElement("li");
+                    li.innerHTML = `📄 ${result.date} - ${result.name}: <b>${result.result}</b>`;
+                    list.appendChild(li);
+                });
+            }
+        }
+
+        // Powrót do strony głównej pacjenta
+        function goBack() {
+            window.location.href = "user.html";
+        }
+
+        loadResults();
+    </script>
+
+</body>
+</html>

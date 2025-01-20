@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strona główna lekarza</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h2>Witaj, doktorze!</h2>
+        
+        <div class="weather">
+            <h3>Pogoda</h3>
+            <p id="weather-info">Ładowanie pogody...</p>
+        </div>
+
+        <div class="calendar">
+            <h3>Kalendarz wizyt</h3>
+            <ul id="appointments">
+                <li>📅 22 stycznia - Wizyta z pacjentem Jan Kowalski</li>
+                <li>📅 24 stycznia - Konsultacja online</li>
+            </ul>
+        </div>
+
+        <div class="button-container">
+            <button onclick="goToPage('appointments.html')">Wizyty</button>
+            <button onclick="goToPage('bank.html')">Stan konta</button>
+            <button onclick="goToPage('results.html')">Wyniki</button>
+        </div>
+    </div>
+
+    <script>
+        function goToPage(page) {
+            window.location.href = page;
+        }
+
+        // Pobieranie pogody
+        async function getWeather() {
+            try {
+                const response = await fetch("https://wttr.in/?format=%C+%t");
+                const weather = await response.text();
+                document.getElementById("weather-info").innerText = weather;
+            } catch (error) {
+                document.getElementById("weather-info").innerText = "Nie udało się pobrać pogody.";
+            }
+        }
+
+        getWeather();
+    </script>
+
+</body>
+</html>

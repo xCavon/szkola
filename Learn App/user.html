@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strona pacjenta</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h2>Witaj, <span id="username">Pacjencie</span>!</h2>
+        
+        <h3>Twoje nadchodzące wizyty</h3>
+        <ul id="appointments-list">
+            <!-- Tutaj pojawią się wizyty pacjenta -->
+        </ul>
+
+        <br>
+        <button onclick="goToResults()">Sprawdź wyniki badań</button>
+        <button onclick="logout()">Wyloguj</button>
+    </div>
+
+    <script>
+        // Pobieranie wizyt użytkownika
+        function loadAppointments() {
+            const list = document.getElementById("appointments-list");
+            list.innerHTML = "";
+            const appointments = JSON.parse(localStorage.getItem("appointments")) || [];
+            
+            if (appointments.length === 0) {
+                list.innerHTML = "<li>Brak zaplanowanych wizyt.</li>";
+            } else {
+                appointments.forEach(appointment => {
+                    const li = document.createElement("li");
+                    li.innerHTML = `📅 ${appointment.date} - ${appointment.name}`;
+                    list.appendChild(li);
+                });
+            }
+        }
+
+        // Pobieranie nazwy użytkownika (jeśli zapisane w localStorage)
+        function loadUsername() {
+            const username = localStorage.getItem("username") || "Pacjencie";
+            document.getElementById("username").innerText = username;
+        }
+
+        // Przejście do wyników badań
+        function goToResults() {
+            window.location.href = "resultsu.html";
+        }
+
+        // Wylogowanie (czyszczenie danych i powrót do logowania)
+        function logout() {
+            localStorage.removeItem("username");
+            window.location.href = "login.html";
+        }
+
+        loadUsername();
+        loadAppointments();
+    </script>
+
+</body>
+</html>

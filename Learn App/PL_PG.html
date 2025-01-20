@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logowanie</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h2>Logowanie użytkownika</h2>
+        <input type="text" id="userLogin" placeholder="Login">
+        <input type="password" id="userPassword" placeholder="Hasło">
+        <button onclick="loginUser()">Zaloguj</button>
+    </div>
+
+    <div class="container">
+        <h2>Logowanie lekarza</h2>
+        <input type="text" id="doctorLogin" placeholder="Login">
+        <input type="password" id="doctorPassword" placeholder="Hasło">
+        <button onclick="loginDoctor()">Zaloguj</button>
+    </div>
+    <script>
+        const users = {
+            "123": "haslo123",
+            "089": "lol123"
+        };
+
+        const doctors = {
+            "wiktor": "wikuś123",
+            "bartek": "bartek123",
+            "natan": "natanek123"
+        };
+
+        function loginUser() {
+            let login = document.getElementById("userLogin").value;
+            let password = document.getElementById("userPassword").value;
+
+            if (users[login] && users[login] === password) {
+                localStorage.setItem("loggedInUser", login);
+                window.location.href = "user.html"; // Przekierowanie do strony użytkownika
+            } else {
+                alert("Niepoprawne dane logowania!");
+            }
+        }
+
+        function loginDoctor() {
+            let login = document.getElementById("doctorLogin").value;
+            let password = document.getElementById("doctorPassword").value;
+
+            if (doctors[login] && doctors[login] === password) {
+                localStorage.setItem("loggedInDoctor", login);
+                window.location.href = "doctor.html"; // Przekierowanie do strony lekarza
+            } else {
+                alert("Niepoprawne dane logowania!");
+            }
+        }
+    </script>
+
+</body>
+</html>
